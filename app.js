@@ -6,13 +6,16 @@ var logger = require('morgan');
 const mongoose = require('mongoose');
 const config = require('./config/globals');
 
+//const for security token
+const passport = require ('passport');
+const BasicStrategy = require('passport-http').BasicStrategy;
 
 
-
+//router declaring
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
 //api endpoints routers
-var projectsApiRouter = require('./routes/api/movies');
+var moviesApiRouter = require('./routes/api/movies');
 
 var app = express();
 
@@ -26,10 +29,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/api/movies', projectsApiRouter);
+app.use(passport.initialize());
+passport.use(new BasicStrategy);
+passport.use(new BasicStrategy((username, password, done) => {
+// User.findOne({username: userid}, function(err, user){
+//   if (!user.verifyPassword(password)){
+//     return done(null, false);
+//   }else{
+//     return done(null, false);
+//   }
+// })
+//password authetication
+if (username == 'admin'&& password == 'Georgian123'){
+  console.log('Admin authentication success');
+  return done(null, username);
+} else {
+  console.log(username+ 'Admin authentication unsuccessful');
+  return done(null, username);
+}
+}));
 
+
+//router end points
+app.use('/', indexRouter);  
+app.use('/api/movies', passport.authenticate('basic',{session: false}), moviesApiRouter);
+
+//connect mongoose mongodb
 mongoose.connect(config.db, {useNewUrlParser: true, useUnifiedTopology: true })
 .then((message) => { console.log('connected successfully');})
 .catch((error)=>{ console.log('error while connecting ${error}');

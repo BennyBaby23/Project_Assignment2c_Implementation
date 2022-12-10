@@ -8,18 +8,7 @@ const Movie = require('../../models/movie');
 
 router.get('/', (req,res,next) => {
 
-    // let projects = [
-
-    //     {
-    //         name: "api sa",
-    //         due: "ansna"
-
-    //     },{
-    //         name: "api sa",
-    //         due: "ansna"
-    //     }
-    // ];
-    // res.json('success');
+   
     Movie.find((err, movies) => {
         if(err){
             console.log(err);
@@ -28,9 +17,11 @@ router.get('/', (req,res,next) => {
             res.json(movies).status(200);
         }
     });
-    //res.status(200).json(movies);
+    
 });
 
+//crud functionality
+//create
 router.post('/', (req,res,next) => {
 //  console.log(req.body);
 //  res.status(200).json(req.body);
@@ -60,7 +51,7 @@ if(!req.body. movieName){
 
 });
 
-
+//update
 router.put('/_id', (req, res, next)=> {
     if(!req.body. movieName){
         res.status(400).json({'ValidationError': 'Movie Name is a required field'});
@@ -87,6 +78,7 @@ router.put('/_id', (req, res, next)=> {
 
 })
 
+//delete
 router.delete('/_id', (req, res, next)=>{
     Movie.remove({
         _id: req.params._id
