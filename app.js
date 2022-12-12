@@ -29,9 +29,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Initialize
 app.use(passport.initialize());
-passport.use(new BasicStrategy);
+
+
 passport.use(new BasicStrategy((username, password, done) => {
+
 // User.findOne({username: userid}, function(err, user){
 //   if (!user.verifyPassword(password)){
 //     return done(null, false);
@@ -39,8 +42,9 @@ passport.use(new BasicStrategy((username, password, done) => {
 //     return done(null, false);
 //   }
 // })
+
 //password authetication
-if (username == 'admin'&& password == 'Georgian123'){
+if (username == 'admin' && password == 'Georgian123'){
   console.log('Admin authentication success');
   return done(null, username);
 } else {
